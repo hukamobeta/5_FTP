@@ -12,7 +12,7 @@ password = input("Введите пароль: ")
 current_directory = "\\"
 
 def creator(message, size=0):
-    return f"{login}=login{password}=password{current_directory}=cur_dir{size}=file_size{message}".encode()
+    return f"{login}={password}={current_directory}={size}={message}".encode()
 
 def encrypt(key, message):
     return ''.join(chr((ord(char) + key) % 65536) for char in message)

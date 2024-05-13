@@ -1,0 +1,32 @@
+Listening on port 6666
+Request: huka=loginhuka=password\=cur_dir0=file_sizels
+Listening on port 6666
+Request: huka=loginhuka=password\=cur_dir0=file_sizels
+Response: bad request
+Request: huka=loginhuka=password\=cur_dir0=file_sizemkdir dir
+Response: bad request
+Request: huka=loginhuka=password\=cur_dir0=file_sizels
+Response: bad request
+Listening on port 6666
+Request: huka=loginhuka=password\=cur_dir0=file_sizels
+Response: bad request
+Listening on port 6666
+Request: huka=loginhuka=password\=cur_dir0=file_sizels
+Response: bad request
+Listening on port 6666
+Request: huka=loginhuka=password\=cur_dir0=file_sizels
+Response: file_sizels
+Request: huka=loginhuka=password\=cur_dir0=file_sizemkdir
+Response: file_sizemkdir
+Request: huka=loginhuka=password\=cur_dir0=file_sizes
+Response: file_sizes
+Request: huka=loginhuka=password\=cur_dir0=file_sizels
+Response: file_sizels
+Listening on port 6666
+Request: huka=loginhuka=password\=cur_dir0=ls
+Listening on port 6666
+Request: huka=huka=\=0=ls
+Response: Incorrect password
+Listening on port 6666
+Request: hukam=hukam=\=0=ls
+Response: 

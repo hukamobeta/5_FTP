@@ -59,50 +59,65 @@ def authorize(message):
             users = json.load(f)
     except FileNotFoundError:
         users = {}
-    login_info = message.split("=")
-    login, password, current_directory, size, message = login_info[0], login_info[1], login_info[2], int(login_info[3]), login_info[4]
+    
+    login_info = message.split("=", 4)
+    if len(login_info) < 5:
+        return None
+    login, password, current_directory, size, command = login_info
     user_root = os.path.join(global_root, login)
+    
     if login in users and users[login] == password:
         os.makedirs(user_root, exist_ok=True)
-        return user_root, current_directory, message, size
+        return user_root, current_directory, command, size
     elif login not in users:
         users[login] = password
         with open(usersfile, "w") as f:
             json.dump(users, f)
         os.makedirs(user_root, exist_ok=True)
-        return user_root, current_directory, message, size
+        return user_root, current_directory, command, size
     return None
+
 
 def process_request(req):
     auth = authorize(req)
     if not auth:
         return "Incorrect password"
-    user_root, current_directory, req, size = auth
-    command, *path = req.split()
-    path = path[0] if path else ""
-    if command == 'pwd':
-        return pwd(current_directory)
-    elif command == 'ls':
-        return ls(os.path.join(user_root, current_directory[1:]))
-    elif command == 'cd':
+    user_root, current_directory, command, size = auth
+    command
+    
+    path = os.path.join(user_root, current_directory.strip("\\"))
+    if command.startswith('pwd'):
+        return pwd(path)
+    elif command.startswith('ls'):
+        return ls(path)
+    elif command.startswith('cd '):
+        path = command[3:].strip()
         return cd(path, current_directory, user_root)
-    elif command == 'mkdir':
-        return mkdir(path)
-    elif command == 'rmtree':
-        return rmtree(path)
-    elif command == 'touch':
-        return touch(path)
-    elif command == 'remove':
-        return remove(path)
-    elif command == 'cat':
-        return cat(path)
-    elif command == 'rename':
-        return rename(*path[:2])
-    elif command == "get_file":
-        return get_file(path)
-    elif command == "send_file":
-        return send_file(path, user_root, size)
-    return 'bad request'
+    elif command.startswith('mkdir '):
+        path = command[6:].strip()
+        return mkdir(os.path.join(user_root, path))
+    elif command.startswith('rmtree '):
+        path = command[7:].strip()
+        return rmtree(os.path.join(user_root, path))
+    elif command.startswith('touch '):
+        path = command[6:].strip()
+        return touch(os.path.join(user_root, path))
+    elif command.startswith('remove '):
+        path = command[7:].strip()
+        return remove(os.path.join(user_root, path))
+    elif command.startswith('cat '):
+        path = command[4:].strip()
+        return cat(os.path.join(user_root, path))
+    elif command.startswith('rename '):
+        paths = command[7:].split()
+        return rename(os.path.join(user_root, paths[0]), os.path.join(user_root, paths[1]))
+    elif command.startswith("get_file "):
+        path = command[9:].strip()
+        return get_file(os.path.join(user_root, path))
+    elif command.startswith("send_file "):
+        path = command[10:].strip()
+        return send_file(os.path.join(user_root, path), user_root, size)
+    return command
 
 def try_decorator(func):
     def wrapper(path, *args):
